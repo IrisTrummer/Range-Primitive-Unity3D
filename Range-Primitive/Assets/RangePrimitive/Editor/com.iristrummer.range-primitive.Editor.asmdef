@@ -1,0 +1,16 @@
+{
+    "name": "com.iristrummer.range-primitive.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:de5d810142384c041ac80664b848f904"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
