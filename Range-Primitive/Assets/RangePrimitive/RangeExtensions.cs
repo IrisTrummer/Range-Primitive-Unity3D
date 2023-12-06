@@ -64,6 +64,34 @@ namespace RangePrimitive
             return Mathf.Lerp(range.Min, range.Max, t);
         }
         
+        /// <summary>
+        /// Returns a value between 0 and 1 indicating where the given value lies between min and max.
+        /// </summary>
+        public static float InverseLerp(this Range<int> range, int value)
+        {
+            return Mathf.InverseLerp(range.Min, range.Max, value);
+        }
+
+        /// <inheritdoc cref="InverseLerp(RangePrimitive.Range{int},int)"/>
+        public static float InverseLerp(this Range<float> range, float value)
+        {
+            return Mathf.InverseLerp(range.Min, range.Max, value);
+        }
+        
+        /// <summary>
+        /// Returns the interpolated value between min and max by t with smoothing at the edges.
+        /// </summary>
+        public static int SmoothStep(this Range<int> range, float t)
+        {
+            return (int) Mathf.SmoothStep(range.Min, range.Max, t);
+        }
+
+        /// <inheritdoc cref="SmoothStep(RangePrimitive.Range{int},float)"/>
+        public static float SmoothStep(this Range<float> range, float t)
+        {
+            return Mathf.SmoothStep(range.Min, range.Max, t);
+        }
+        
         # endregion
         
         # region Delta
