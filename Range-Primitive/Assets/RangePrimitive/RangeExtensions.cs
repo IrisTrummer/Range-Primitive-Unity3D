@@ -7,7 +7,7 @@ namespace RangePrimitive
         # region Random
 
         /// <summary>
-        /// Returns a random value between min and max (both inclusive).
+        /// Returns a random value between min and max (both edges inclusive).
         /// </summary>
         public static int Random(this Range<int> range)
         {
@@ -21,7 +21,7 @@ namespace RangePrimitive
         }
         
         /// <summary>
-        /// Returns a new vector where each component has a random value between the corresponding min and max component of the range.
+        /// Returns a new vector where each component has a random value between the corresponding components of min and max (both edges inclusive).
         /// </summary>
         public static Vector2 Random(this Range<Vector2> range)
         {
@@ -129,7 +129,7 @@ namespace RangePrimitive
         # region Clamp
         
         /// <summary>
-        /// Clamps the given value between the min and max values of the range.
+        /// Clamps the given value between min and max.
         /// </summary>
         public static int Clamp(this Range<int> range, int value)
         {
@@ -143,7 +143,7 @@ namespace RangePrimitive
         }
         
         /// <summary>
-        /// Returns a new vector where each component is clamped between the corresponding min and max component of the range.
+        /// Returns a new vector where each component is clamped between the corresponding components of min and max.
         /// </summary>
         public static Vector2 Clamp(this Range<Vector2> range, Vector2 value)
         {
@@ -166,6 +166,60 @@ namespace RangePrimitive
         public static Vector3Int Clamp(this Range<Vector3Int> range, Vector3Int value)
         {
             return new Vector3Int(Mathf.Clamp(value.x, range.Min.x, range.Max.x), Mathf.Clamp(value.y, range.Min.y, range.Max.y), Mathf.Clamp(value.z, range.Min.z, range.Max.z));
+        }
+        
+        # endregion
+        
+        # region Contains
+        
+        /// <summary>
+        /// Returns true if the given values lies between min and max (edges edges inclusive).
+        /// </summary>
+        public static bool Contains(this Range<int> range, int value)
+        {
+            return Contains(value, range.Min, range.Max);
+        }
+        
+        /// <inheritdoc cref="Contains(RangePrimitive.Range{int},int)"/>
+        public static bool Contains(this Range<float> range, float value)
+        {
+            return Contains(value, range.Min, range.Max);
+        }
+        
+        /// <summary>
+        /// Returns true if all components of the given vector lie between the corresponding components of min and max.
+        /// </summary>
+        public static bool Contains(this Range<Vector2> range, Vector2 value)
+        {
+            return Contains(value.x, range.Min.x, range.Max.x) && Contains(value.y, range.Min.y, range.Max.y);
+        }
+        
+        /// <inheritdoc cref="Contains(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static bool Contains(this Range<Vector2Int> range, Vector2Int value)
+        {
+            return Contains(value.x, range.Min.x, range.Max.x) && Contains(value.y, range.Min.y, range.Max.y);
+        }
+        
+        /// <inheritdoc cref="Contains(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static bool Contains(this Range<Vector3> range, Vector3 value)
+        {
+            return Contains(value.x, range.Min.x, range.Max.x) && Contains(value.y, range.Min.y, range.Max.y) && Contains(value.z, range.Min.z, range.Max.z);
+        }
+        
+        /// <inheritdoc cref="Contains(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static bool Contains(this Range<Vector3Int> range, Vector3Int value)
+        {
+            return Contains(value.x, range.Min.x, range.Max.x) && Contains(value.y, range.Min.y, range.Max.y) && Contains(value.z, range.Min.z, range.Max.z);
+        }
+
+        private static bool Contains(int value, int min, int max)
+        {
+            return value >= min && value <= max;
+        }
+        
+        private static bool Contains(float value, float min, float max)
+        {
+            return value >= min && value <= max;
         }
         
         # endregion
