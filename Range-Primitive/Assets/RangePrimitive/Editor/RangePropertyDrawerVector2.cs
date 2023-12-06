@@ -13,10 +13,7 @@ namespace RangePrimitive.Editor
         protected const string XCoordinatePath = "x";
         protected const string YCoordinatePath = "y";
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return base.GetPropertyHeight(property, label) * 2;
-        }
+        protected override int BaseRowAmount => 2;
 
         protected override void DrawPropertyFields(Rect rect, SerializedProperty property)
         {
@@ -30,10 +27,10 @@ namespace RangePrimitive.Editor
 
             foreach (string rowPath in rowPaths)
             {
-                var rangeProperty = property.FindPropertyRelative(rowPath);
+                SerializedProperty p = property.FindPropertyRelative(rowPath);
 
-                string[] paths = CreateCopyWithParentPath(columnPaths, rangeProperty.name);
-                CreateRowOfPropertyFields(rect, property, paths, SubLabelWidth, rangeProperty.displayName);
+                string[] paths = CreateCopyWithParentPath(columnPaths, p.name);
+                CreateRowOfPropertyFields(rect, property, paths, SubLabelWidth, p.displayName);
 
                 rect.y += rect.height + SpacingBetweenLines;
             }

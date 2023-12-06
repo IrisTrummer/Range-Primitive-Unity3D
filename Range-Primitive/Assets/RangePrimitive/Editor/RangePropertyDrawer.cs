@@ -13,18 +13,31 @@ namespace RangePrimitive.Editor
         private const string MinPath = "min";
         private const string MaxPath = "max";
 
+        protected virtual int BaseRowAmount => 1;
+
+        private static bool ShouldLineWrap => !EditorGUIUtility.wideMode;
+        
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            int rowAmount = BaseRowAmount + (ShouldLineWrap ? 1 : 0);
+            return base.GetPropertyHeight(property, label) * rowAmount;
+        }
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
-
-            Rect tooltipLabel = position;
-            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+            
+            Rect fieldRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
             // support for tooltip attribute
-            tooltipLabel.width -= position.width;
+            Rect tooltipLabel = position;
+            tooltipLabel.width -= fieldRect.width;
             EditorGUI.LabelField(tooltipLabel, new GUIContent("", property.tooltip));
 
-            DrawPropertyFields(position, property);
+            if (ShouldLineWrap)
+                fieldRect = GetWrappedRect(position);
+
+            DrawPropertyFields(fieldRect, property);
 
             EditorGUI.EndProperty();
         }
@@ -46,11 +59,11 @@ namespace RangePrimitive.Editor
             EditorGUIUtility.labelWidth = propertyLabelWidth;
             Rect propertyRect = new Rect(rect.x, rect.y, propertyWidth, rect.height);
 
-            foreach (string columnPath in propertyPaths)
+            foreach (string path in propertyPaths)
             {
-                var vectorProperty = property.FindPropertyRelative($"{columnPath}");
+                SerializedProperty p = property.FindPropertyRelative($"{path}");
 
-                EditorGUI.PropertyField(propertyRect, vectorProperty, new GUIContent(vectorProperty.displayName));
+                EditorGUI.PropertyField(propertyRect, p, new GUIContent(p.displayName));
                 propertyRect.x += propertyWidth + SpacingBetweenFields;
             }
         }
@@ -58,6 +71,21 @@ namespace RangePrimitive.Editor
         protected string[] GetRangePropertyPaths()
         {
             return new[] { MinPath, MaxPath };
+        }
+        
+        private Rect GetWrappedRect(Rect startingRect)
+        {
+            EditorGUI.indentLevel++;
+
+            Rect rect = EditorGUI.IndentedRect(startingRect);
+
+            float lineHeight = rect.height / (BaseRowAmount + 1);
+            rect.y += lineHeight;
+            rect.height -= lineHeight;
+            
+            EditorGUI.indentLevel--;
+
+            return rect;
         }
     }
 }
