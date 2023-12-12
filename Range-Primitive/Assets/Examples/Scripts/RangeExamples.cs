@@ -48,7 +48,7 @@ namespace Examples.Scripts
             }
 
             // Get the spread of the defined range
-            Debug.Log(range.Spread()); // Output: 156
+            Debug.Log(range.Size()); // Output: 156
 
             // Calculate at what point the value 37 lies between the start and end of the range
             Debug.Log(range.InverseLerp(37)); // Output: 0.16
@@ -73,7 +73,7 @@ namespace Examples.Scripts
             Gizmos.color = Color.blue;
 
             Range<Vector2> range2D = new Range<Vector2>(new Vector2(-10, -10), new Vector2(10, 10));
-            Gizmos.DrawWireCube(range2D.Center(), range2D.Spread());
+            Gizmos.DrawWireCube(range2D.Center(), range2D.Size());
         }
     }
 }

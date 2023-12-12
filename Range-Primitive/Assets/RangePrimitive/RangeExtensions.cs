@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RangePrimitive
 {
@@ -306,13 +306,13 @@ namespace RangePrimitive
         /// <summary>
         /// Returns the absolute difference between min and max, which is equal to the spread of the range.
         /// </summary>
-        public static int Spread(this Range<int> range)
+        public static int Size(this Range<int> range)
         {
             return Mathf.Abs(range.Delta());
         }
 
-        /// <inheritdoc cref="Spread(RangePrimitive.Range{int})"/>
-        public static float Spread(this Range<float> range)
+        /// <inheritdoc cref="Size"/>
+        public static float Size(this Range<float> range)
         {
             return Mathf.Abs(range.Delta());
         }
@@ -320,28 +320,28 @@ namespace RangePrimitive
         /// <summary>
         /// Returns the absolute, component-wise difference between min and max, which is equal to the spread of the range.
         /// </summary>
-        public static Vector2 Spread(this Range<Vector2> range)
+        public static Vector2 Size(this Range<Vector2> range)
         {
             Vector2 delta = range.Delta();
             return new Vector2(Mathf.Abs(delta.x), Mathf.Abs(delta.y));
         }
 
-        /// <inheritdoc cref="Spread(RangePrimitive.Range{UnityEngine.Vector2})"/>
-        public static Vector2Int Spread(this Range<Vector2Int> range)
+        /// <inheritdoc cref="Size(RangePrimitive.Range{UnityEngine.Vector2})"/>
+        public static Vector2Int Size(this Range<Vector2Int> range)
         {
             Vector2Int delta = range.Delta();
             return new Vector2Int(Mathf.Abs(delta.x), Mathf.Abs(delta.y));
         }
 
-        /// <inheritdoc cref="Spread(RangePrimitive.Range{UnityEngine.Vector2})"/>
-        public static Vector3 Spread(this Range<Vector3> range)
+        /// <inheritdoc cref="Size(RangePrimitive.Range{UnityEngine.Vector2})"/>
+        public static Vector3 Size(this Range<Vector3> range)
         {
             Vector3 delta = range.Delta();
             return new Vector3(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
         }
 
-        /// <inheritdoc cref="Spread(RangePrimitive.Range{UnityEngine.Vector2})"/>
-        public static Vector3Int Spread(this Range<Vector3Int> range)
+        /// <inheritdoc cref="Size(RangePrimitive.Range{UnityEngine.Vector2})"/>
+        public static Vector3Int Size(this Range<Vector3Int> range)
         {
             Vector3Int delta = range.Delta();
             return new Vector3Int(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
