@@ -5,17 +5,6 @@ using UnityEngine;
 
 namespace Tests
 {
-    // ✔ Reorder
-    // ✔ Random
-    // ✔ Lerp
-    // ✔ InverseLerp
-    // ✔ SmoothStep
-    // ✔ Delta
-    // ✔ Spread
-    // ✔ Clamp
-    // ✔ IsContained
-    // Center
-
     public class RangeTests
     {
         private static IEnumerable<int> TestValues => new[] { -150, -5, -3, -2, -1, 0, 1, 2, 3, 8, 50, 99, 1005 };
@@ -27,30 +16,31 @@ namespace Tests
         #region Reorder
 
         [Test]
-        public void Reorder_MixedValues_MinAndMaxAreInCorrectOrder([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
+        public void Reorder_DifferentRanges_MinIsSmallerThanOrEqualToMax([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
         {
             Range<int> range = new Range<int>(min, max);
 
             range = range.Reorder();
-            
+
             Assert.IsTrue(range.Min <= range.Max);
         }
 
         #endregion
-        
+
         #region Random
 
         [Test]
-        public void Random_GeneratedValue_ValueIsInsideOfRange([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
+        public void Random_DifferentRanges_GeneratedValueIsContainedInRange([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
         {
             Range<int> range = new Range<int>(min, max);
 
             int value = range.Random();
-            
+
             Assert.IsTrue(range.Contains(value), $"Generated value: {value}");
         }
+
         #endregion
-        
+
         #region Lerp
 
         [Test]
@@ -59,171 +49,340 @@ namespace Tests
             Range<int> range = new Range<int>(min, max);
 
             float result = range.Lerp(1);
-            
+
             Assert.IsTrue(Mathf.Approximately(result, max), $"Result: {result}");
         }
-        
+
         [Test]
         public void Lerp_FactorZero_ReturnsMin([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
         {
             Range<int> range = new Range<int>(min, max);
 
             float result = range.Lerp(0);
-            
+
             Assert.IsTrue(Mathf.Approximately(result, min), $"Result: {result}");
+        }
+
+        [Test]
+        [TestCase(0, 0)]
+        [TestCase(-5, 0.5f)]
+        [TestCase(99, 1)]
+        public void Lerp_RangeWithMinEqualToMax_ReturnsMin(int minMax, float t)
+        {
+            Range<int> range = new Range<int>(minMax, minMax);
+
+            float result = range.Lerp(t);
+
+            Assert.IsTrue(Mathf.Approximately(result, minMax), $"Result: {result}");
+        }
+
+        [Test]
+        [TestCase(99, -5, 0.25f, 73)]
+        [TestCase(2, 1, 0.5f, 1.5f)]
+        [TestCase(-10, -192, 0.75f, -146.5f)]
+        public void Lerp_RangeWithMinLargerThanMax_ReturnsExpectedResult(int min, int max, float value, float expectedResult)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            float result = range.Lerp(value);
+
+            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
         }
         
         [Test]
-        [TestCase(0, 0, 1, 0)]
         [TestCase(1, 2, 0.25f, 1.25f)]
         [TestCase(1, 2, 0.5f, 1.5f)]
-        [TestCase(2, 1, 0.5f, 1.5f)]
-        [TestCase(-10, -192, 0.75f, -146.5f)]
         [TestCase(120, 194, 0.81f, 179.94f)]
-        [TestCase(10, 50, -1, 10)]
-        [TestCase(-100, -10, 100, -10f)]
-        public void Lerp_DifferentFactors_ReturnsExpectedResult([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max, float t, float expectedResult)
+        public void Lerp_RangeWithMinSmallerThanMax_ReturnsExpectedResult(int min, int max, float value, float expectedResult)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            float result = range.Lerp(value);
+
+            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
+        }
+        
+        [Test]
+        [TestCase(0, 1, -1)]
+        [TestCase(99, 5, -2)]
+        [TestCase(-5, -1, -0.5f)]
+        public void Lerp_ValueSmallerThanZero_ReturnsMin(int min, int max, float t)
         {
             Range<int> range = new Range<int>(min, max);
 
             float result = range.Lerp(t);
-            
-            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
+
+            Assert.IsTrue(Mathf.Approximately(result, min), $"Result: {result}");
         }
         
+        [Test]
+        [TestCase(0, 1, 1)]
+        [TestCase(99, 5, 2)]
+        [TestCase(-5, -1, 1.5f)]
+        public void Lerp_ValueLargerThanOne_ReturnsMax(int min, int max, float t)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            float result = range.Lerp(t);
+
+            Assert.IsTrue(Mathf.Approximately(result, max), $"Result: {result}");
+        }
+
         #endregion
-        
+
         #region InverseLerp
-        
+
         [Test]
         public void InverseLerp_MaxValue_ReturnsOne([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
         {
             if (min == max)
                 return;
-            
+
             Range<int> range = new Range<int>(min, max);
 
             float result = range.InverseLerp(max);
-            
+
             Assert.IsTrue(Mathf.Approximately(result, 1), $"Result: {result}");
         }
-        
+
         [Test]
         public void InverseLerp_MinValue_ReturnsZero([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
         {
             Range<int> range = new Range<int>(min, max);
 
             float result = range.InverseLerp(min);
-            
+
             Assert.IsTrue(Mathf.Approximately(result, 0), $"Result: {result}");
         }
         
         [Test]
-        [TestCase(0, 0, 0, 0)]
-        [TestCase(1, 2, 1.25f, 0.25f)]
-        [TestCase(1, 2, 1.5f, 0.5f)]
+        [TestCase(0, 0)]
+        [TestCase(0, 1)]
+        [TestCase(50, -100)]
+        [TestCase(-99, 100)]
+        public void InverseLerp_RangeWithMinEqualToMax_ReturnsZero(int minMax, int value)
+        {
+            Range<int> range = new Range<int>(minMax, minMax);
+
+            float result = range.InverseLerp(value);
+
+            Assert.IsTrue(Mathf.Approximately(result, 0), $"Result: {result}");
+        }
+
+        [Test]
+        [TestCase(99, -5, 73, 0.25f)]
         [TestCase(2, 1, 1.5f, 0.5f)]
         [TestCase(-10, -192, -146.5f, 0.75f)]
-        [TestCase(120, 194, 179.94f, 0.81f)]
-        [TestCase(10, 50, 100, 1)]
-        [TestCase(-100, -10, -110, 0f)]
-        public void InverseLerp_DifferentValues_ReturnsExpectedResult([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max, float value, float expectedTResult)
+        public void InverseLerp_RangeWithMinLargerThanMax_ReturnsExpectedResult(int min, int max, float value, float expectedResult)
         {
             Range<int> range = new Range<int>(min, max);
 
             float result = range.InverseLerp(value);
-            
-            Assert.IsTrue(Mathf.Approximately(result, expectedTResult), $"Result: {result}");
+
+            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
         }
         
+        [Test]
+        [TestCase(1, 2, 1.25f, 0.25f)]
+        [TestCase(1, 2, 1.5f, 0.5f)]
+        [TestCase(120, 194, 179.94f, 0.81f)]
+        public void InverseLerp_RangeWithMinSmallerThanMax_ReturnsExpectedResult(int min, int max, float value, float expectedResult)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            float result = range.InverseLerp(value);
+
+            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
+        }
+        
+        [Test]
+        [TestCase(10, 50, 100, 1)]
+        [TestCase(-99, -50, 100, 1)]
+        [TestCase(-100, -10, -110, 0f)]
+        [TestCase(100, 150, -1, 0f)]
+        public void InverseLerp_ValueOutsideRange_ReturnsCloserBoundary(int min, int max, float value, float expectedResult)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            float result = range.InverseLerp(value);
+
+            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
+        }
+
         #endregion
-        
+
         #region SmoothStep
-        
+
         [Test]
         public void SmoothStep_FactorOne_ReturnsMax([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
         {
             Range<int> range = new Range<int>(min, max);
 
             float result = range.SmoothStep(1);
-            
+
             Assert.IsTrue(Mathf.Approximately(result, max), $"Result: {result}");
         }
-        
+
         [Test]
         public void SmoothStep_FactorZero_ReturnsMin([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
         {
             Range<int> range = new Range<int>(min, max);
 
             float result = range.SmoothStep(0);
-            
+
             Assert.IsTrue(Mathf.Approximately(result, min), $"Result: {result}");
+        }
+
+        [Test]
+        [TestCase(0, 0)]
+        [TestCase(-5, 0.5f)]
+        [TestCase(99, 1)]
+        public void SmoothStep_RangeWithMinEqualToMax_ReturnsMin(int minMax, float t)
+        {
+            Range<int> range = new Range<int>(minMax, minMax);
+
+            float result = range.SmoothStep(t);
+
+            Assert.IsTrue(Mathf.Approximately(result, minMax), $"Result: {result}");
+        }
+
+        [Test]
+        [TestCase(1, 0, 0.1f, 0.972f)]
+        [TestCase(100, 5, 0.5f, 52.5f)]
+        [TestCase(50, 5, 0.9f, 6.26f)]
+        public void SmoothStep_RangeWithMinLargerThanMax_ReturnsExpectedResult(int min, int max, float value, float expectedResult)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            float result = range.SmoothStep(value);
+
+            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
+        }
+
+        [Test]
+        [TestCase(1, 2, 0.1f, 1.028f)]
+        [TestCase(1, 5, 0.25f, 1.625f)]
+        [TestCase(-10, 10, 0.75f, 6.875f)]
+        [TestCase(190, 580, 0.9f, 569.08f)]
+        public void SmoothStep_RangeWithMinSmallerThanMax_ReturnsExpectedResult(int min, int max, float value, float expectedResult)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            float result = range.SmoothStep(value);
+
+            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
         }
         
         [Test]
-        [TestCase(0, 0, 1, 0)]
-        [TestCase(1, 2, 0.1f, 1.028f)]
-        [TestCase(1, 5, 0.25f, 1.625f)]
-        [TestCase(100, 5, 0.5f, 52.5f)]
-        [TestCase(-10, 10, 0.75f, 6.875f)]
-        [TestCase(190, 580, 0.9f, 569.08f)]
-        [TestCase(10, 50, -1, 10)]
-        [TestCase(-100, -10, 100, -10f)]
-        public void SmoothStep_DifferentFactors_ReturnsExpectedResult([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max, float t, float expectedResult)
+        [TestCase(0, 1, -1)]
+        [TestCase(99, 5, -2)]
+        [TestCase(-5, -1, -0.5f)]
+        public void SmoothStep_ValueSmallerThanZero_ReturnsMin(int min, int max, float t)
         {
             Range<int> range = new Range<int>(min, max);
 
             float result = range.SmoothStep(t);
-            
-            Assert.IsTrue(Mathf.Approximately(result, expectedResult), $"Result: {result}");
+
+            Assert.IsTrue(Mathf.Approximately(result, min), $"Result: {result}");
         }
         
+        [Test]
+        [TestCase(0, 1, 1)]
+        [TestCase(99, 5, 2)]
+        [TestCase(-5, -1, 1.5f)]
+        public void SmoothStep_ValueLargerThanOne_ReturnsMax(int min, int max, float t)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            float result = range.SmoothStep(t);
+
+            Assert.IsTrue(Mathf.Approximately(result, max), $"Result: {result}");
+        }
+
         #endregion
 
         #region Delta
+
+        [Test]
+        public void Delta_RangeWithMinEqualToMax_ReturnsZero([ValueSource(nameof(ValuesForEmptyRange))] int minMax)
+        {
+            Range<int> range = new Range<int>(minMax, minMax);
+
+            int result = range.Delta();
+
+            Assert.IsTrue(result == 0, $"Result: {result}");
+        }
         
         [Test]
-        [TestCase(0, 0, 0)]
-        [TestCase(1, 2, 1)]
         [TestCase(2, 1, -1)]
-        [TestCase(50, 50, 0)]
         [TestCase(100, 5, -95)]
-        [TestCase(-10, 10, 20)]
         [TestCase(-150, -580, -430)]
-        public void Delta_DifferentValues_ReturnsExpectedResult([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max, int expectedResult)
+        public void Delta_RangeWithMinLargerThanMax_ReturnsExpectedValue(int min, int max, int expectedResult)
         {
             Range<int> range = new Range<int>(min, max);
 
             int result = range.Delta();
-            
+
             Assert.IsTrue(result == expectedResult, $"Result: {result}");
         }
         
-        #endregion
-        
-        #region Spread
-        
         [Test]
-        [TestCase(0, 0, 0)]
         [TestCase(1, 2, 1)]
-        [TestCase(2, 1, 1)]
-        [TestCase(50, 50, 0)]
-        [TestCase(100, 5, 95)]
         [TestCase(-10, 10, 20)]
-        [TestCase(-150, -580, 430)]
-        public void Spread_DifferentValues_ReturnsExpectedResult([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max, int expectedResult)
+        [TestCase(-150, -100, 50)]
+        public void Delta_RangeWithMinSmallerThanMax_ReturnsExpectedValue(int min, int max, int expectedResult)
         {
             Range<int> range = new Range<int>(min, max);
 
-            int result = range.Spread();
-            
+            int result = range.Delta();
+
+            Assert.IsTrue(result == expectedResult, $"Result: {result}");
+        }
+
+        #endregion
+
+        #region Size
+
+        [Test]
+        public void Size_RangeWithMinEqualToMax_ReturnsZero([ValueSource(nameof(ValuesForEmptyRange))] int minMax)
+        {
+            Range<int> range = new Range<int>(minMax, minMax);
+
+            int result = range.Size();
+
+            Assert.IsTrue(result == 0, $"Result: {result}");
+        }
+        
+        [Test]
+        [TestCase(2, 1, 1)]
+        [TestCase(100, -5, 105)]
+        [TestCase(-50, -99, 49)]
+        public void Size_RangeWithMinLargerThanMax_ReturnsExpectedResult(int min, int max, int expectedResult)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            int result = range.Size();
+
             Assert.IsTrue(result == expectedResult, $"Result: {result}");
         }
         
+        [Test]
+        [TestCase(1, 2, 1)]
+        [TestCase(-10, 10, 20)]
+        [TestCase(-580, -150, 430)]
+        public void Size_RangeWithMinSmallerThanMax_ReturnsExpectedResult(int min, int max, int expectedResult)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            int result = range.Size();
+
+            Assert.IsTrue(result == expectedResult, $"Result: {result}");
+        }
+
         #endregion
-        
+
         #region Clamp
-        
+
         [Test]
         [TestCase(0, 0, 0)]
         [TestCase(1, 2, 2)]
@@ -236,10 +395,10 @@ namespace Tests
             Range<int> range = new Range<int>(min, max);
 
             int clampedValue = range.Clamp(value);
-            
+
             Assert.IsTrue(clampedValue == value, $"Result: {clampedValue}");
         }
-        
+
         [Test]
         [TestCase(0, 0, 1)]
         [TestCase(1, 5, 10)]
@@ -252,12 +411,12 @@ namespace Tests
             Range<int> range = new Range<int>(min, max);
 
             int clampedValue = range.Clamp(value);
-            
+
             Assert.IsTrue(range.Contains(clampedValue), $"Result: {clampedValue}");
         }
-        
+
         #endregion
-        
+
         #region Contains
 
         [Test]
@@ -306,21 +465,21 @@ namespace Tests
 
             Assert.IsTrue(contains, $"Tested value: {max}");
         }
-        
+
         #endregion
-        
+
         #region Center
 
         [Test]
         public void Center_RangeWithMinEqualToMax_ReturnsMinValue([ValueSource(nameof(ValuesForEmptyRange))] int minMax)
         {
             Range<int> range = new Range<int>(minMax, minMax);
-            
+
             float center = range.Center();
 
             Assert.IsTrue(Mathf.Approximately(center, minMax), $"Result: {center}");
         }
-        
+
         [Test]
         [TestCase(5, 0, 2.5f)]
         [TestCase(100, -10, 45)]
@@ -333,7 +492,7 @@ namespace Tests
 
             Assert.IsTrue(Mathf.Approximately(center, expectedResult), $"Result: {center}");
         }
-        
+
         [Test]
         [TestCase(0, 5, 2.5f)]
         [TestCase(-100, -10, -55)]
