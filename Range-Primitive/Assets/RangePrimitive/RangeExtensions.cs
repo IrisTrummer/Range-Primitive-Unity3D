@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace RangePrimitive
 {
@@ -63,7 +63,7 @@ namespace RangePrimitive
         /// </summary>
         public static int Random(this Range<int> range)
         {
-            return Random(range.Min, range.Max + 1);
+            return Random(range.Min, range.Max);
         }
 
         /// <inheritdoc cref="Random(RangePrimitive.Range{int})"/>
