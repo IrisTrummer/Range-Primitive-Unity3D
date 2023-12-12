@@ -401,12 +401,38 @@ namespace Tests
 
         [Test]
         [TestCase(0, 0, 1)]
+        [TestCase(5, 5, -10)]
+        [TestCase(-99, -99, 1)]
+        public void Clamp_RangeWithMinEqualToMax_ReturnsMin(int min, int max, int value)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            int clampedValue = range.Clamp(value);
+
+            Assert.IsTrue(clampedValue == range.Min, $"Result: {clampedValue}");
+        }
+
+        [Test]
         [TestCase(1, 5, 10)]
+        [TestCase(100, -1, 1000)]
+        [TestCase(-5, 10, 99)]
+        [TestCase(-100, -99, -98)]
+        public void Clamp_ValueLargerThanMax_ReturnsMax(int min, int max, int value)
+        {
+            Range<int> range = new Range<int>(min, max);
+
+            int clampedValue = range.Clamp(value);
+
+            Assert.IsTrue(clampedValue == Mathf.Max(min, max), $"Result: {clampedValue}");
+        }
+        
+        [Test]
+        [TestCase(1, 5, -10)]
         [TestCase(10, 50, -1)]
         [TestCase(5, 1, 0)]
         [TestCase(-100, -10, -101)]
-        [TestCase(100, -1, 1000)]
-        public void Clamp_ValueOutsideRange_ReturnsValueContainedInRange(int min, int max, int value)
+        [TestCase(100, -1, -5)]
+        public void Clamp_ValueSmallerThanMin_ReturnsMin(int min, int max, int value)
         {
             Range<int> range = new Range<int>(min, max);
 
