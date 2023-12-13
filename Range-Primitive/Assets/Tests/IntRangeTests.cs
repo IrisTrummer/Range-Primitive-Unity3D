@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Tests
 {
-    public class RangeTests
+    public class IntRangeTests
     {
         private static IEnumerable<int> TestValues => new[] { -150, -5, -3, -2, -1, 0, 1, 2, 3, 8, 50, 99, 1005 };
         private static IEnumerable<int> ValuesForEmptyRange => new[] { 0, 5, -99 };
@@ -133,11 +133,11 @@ namespace Tests
         #region InverseLerp
 
         [Test]
-        public void InverseLerp_MaxValue_ReturnsOne([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
+        [TestCase(0, 1)]
+        [TestCase(-5, 99)]
+        [TestCase(-105, 1)]
+        public void InverseLerp_MaxValue_ReturnsOne(int min, int max)
         {
-            if (min == max)
-                return;
-
             Range<int> range = new Range<int>(min, max);
 
             float result = range.InverseLerp(max);
@@ -287,7 +287,7 @@ namespace Tests
         }
         
         [Test]
-        [TestCase(0, 1, 1)]
+        [TestCase(0, 1, 1.1f)]
         [TestCase(99, 5, 2)]
         [TestCase(-5, -1, 1.5f)]
         public void SmoothStep_ValueLargerThanOne_ReturnsMax(int min, int max, float t)
