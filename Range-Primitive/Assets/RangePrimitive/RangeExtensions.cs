@@ -452,7 +452,7 @@ namespace RangePrimitive
 
         private static bool Contains(float value, float min, float max)
         {
-            return value >= Mathf.Min(min, max) && value <= Mathf.Max(min, max);
+            return (value > Mathf.Min(min, max) && value < Mathf.Max(min, max)) || Mathf.Approximately(value, min) || Mathf.Approximately(value, max);
         }
 
         #endregion
