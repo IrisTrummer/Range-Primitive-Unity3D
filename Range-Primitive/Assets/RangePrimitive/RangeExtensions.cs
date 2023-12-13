@@ -301,7 +301,7 @@ namespace RangePrimitive
         
         #endregion
         
-        #region Spread
+        #region Size
 
         /// <summary>
         /// Returns the absolute difference between min and max, which is equal to the spread of the range.
@@ -311,7 +311,7 @@ namespace RangePrimitive
             return Mathf.Abs(range.Delta());
         }
 
-        /// <inheritdoc cref="Size"/>
+        /// <inheritdoc cref="Size(RangePrimitive.Range{int})"/>
         public static float Size(this Range<float> range)
         {
             return Mathf.Abs(range.Delta());
