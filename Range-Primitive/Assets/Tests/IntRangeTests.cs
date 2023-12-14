@@ -438,7 +438,7 @@ namespace Tests
 
             int clampedValue = range.Clamp(value);
 
-            Assert.IsTrue(range.Contains(clampedValue), $"Result: {clampedValue}");
+            Assert.IsTrue(clampedValue == Mathf.Min(min, max), $"Result: {clampedValue}");
         }
 
         #endregion
