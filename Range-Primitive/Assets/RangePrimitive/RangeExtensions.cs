@@ -176,29 +176,29 @@ namespace RangePrimitive
         }
         
         /// <summary>
-        /// For each component, returns a value between 0 and 1 indicating where the given value lies between the corresponding component of min and max.
+        /// For each component, returns a value between 0 and 1 indicating where the corresponding component of the given value lies between min and max.
         /// </summary>
-        public static Vector2 InverseLerp(this Range<Vector2> range, float value)
+        public static Vector2 InverseLerp(this Range<Vector2> range, Vector2 value)
         {
-            return new Vector2(InverseLerp(range.Min.x, range.Max.x, value), InverseLerp(range.Min.y, range.Max.y, value));
+            return new Vector2(InverseLerp(range.Min.x, range.Max.x, value.x), InverseLerp(range.Min.y, range.Max.y, value.y));
         }
         
-        /// <inheritdoc cref="InverseLerp(RangePrimitive.Range{Vector2},float)"/>
-        public static Vector2 InverseLerp(this Range<Vector2Int> range, float value)
+        /// <inheritdoc cref="InverseLerp(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static Vector2 InverseLerp(this Range<Vector2Int> range, Vector2 value)
         {
-            return new Vector2(InverseLerp(range.Min.x, range.Max.x, value), InverseLerp(range.Min.y, range.Max.y, value));
+            return new Vector2(InverseLerp(range.Min.x, range.Max.x, value.x), InverseLerp(range.Min.y, range.Max.y, value.y));
         }
 
-        /// <inheritdoc cref="InverseLerp(RangePrimitive.Range{Vector2},float)"/>
-        public static Vector3 InverseLerp(this Range<Vector3> range, float value)
+        /// <inheritdoc cref="InverseLerp(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static Vector3 InverseLerp(this Range<Vector3> range, Vector3 value)
         {
-            return new Vector3(InverseLerp(range.Min.x, range.Max.x, value), InverseLerp(range.Min.y, range.Max.y, value), InverseLerp(range.Min.z, range.Max.z, value));
+            return new Vector3(InverseLerp(range.Min.x, range.Max.x, value.x), InverseLerp(range.Min.y, range.Max.y, value.y), InverseLerp(range.Min.z, range.Max.z, value.z));
         }
 
-        /// <inheritdoc cref="InverseLerp(RangePrimitive.Range{Vector2},float)"/>
-        public static Vector3 InverseLerp(this Range<Vector3Int> range, float value)
+        /// <inheritdoc cref="InverseLerp(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static Vector3 InverseLerp(this Range<Vector3Int> range, Vector3 value)
         {
-            return new Vector3(InverseLerp(range.Min.x, range.Max.x, value), InverseLerp(range.Min.y, range.Max.y, value), InverseLerp(range.Min.z, range.Max.z, value));
+            return new Vector3(InverseLerp(range.Min.x, range.Max.x, value.x), InverseLerp(range.Min.y, range.Max.y, value.y), InverseLerp(range.Min.z, range.Max.z, value.z));
         }
 
         private static float InverseLerp(float min, float max, float value)
