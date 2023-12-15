@@ -13,20 +13,10 @@ namespace Tests
         private const int RandomSeed = 128;
         private readonly System.Random random = new(RandomSeed);
 
-        private static bool Approximately(Vector2 v1, Vector2 v2)
-        {
-            return Mathf.Approximately(v1.x, v2.x) && Mathf.Approximately(v1.y, v2.y);
-        }
-
-        private static bool Approximately(Vector2 v1, float v2)
-        {
-            return Mathf.Approximately(v1.x, v2) && Mathf.Approximately(v1.y, v2);
-        }
-
         #region Reorder
 
         [Test]
-        public void Reorder_DifferentRanges_MinIsSmallerThanOrEqualToMax([ValueSource(nameof(TestValues))] Vector2 min, [ValueSource(nameof(TestValues))] Vector2 max)
+        public void ReorderPerComponent_DifferentRanges_MinIsSmallerThanOrEqualToMax([ValueSource(nameof(TestValues))] Vector2 min, [ValueSource(nameof(TestValues))] Vector2 max)
         {
             Range<Vector2> range = new Range<Vector2>(min, max);
 
@@ -60,7 +50,7 @@ namespace Tests
 
             Vector2 result = range.Lerp(1);
 
-            Assert.IsTrue(Approximately(result, max), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, max), $"Result: {result}");
         }
 
         [Test]
@@ -70,7 +60,7 @@ namespace Tests
 
             Vector2 result = range.Lerp(0);
 
-            Assert.IsTrue(Approximately(result, min), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, min), $"Result: {result}");
         }
 
         [Test]
@@ -84,7 +74,7 @@ namespace Tests
 
             Vector2 result = range.Lerp(t);
 
-            Assert.IsTrue(Approximately(result, minMax), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, minMax), $"Result: {result}");
         }
 
         [Test]
@@ -101,7 +91,7 @@ namespace Tests
 
             Vector2 result = range.Lerp(t);
 
-            Assert.IsTrue(Approximately(result, expectedResult), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, expectedResult), $"Result: {result}");
         }
 
         [Test]
@@ -114,20 +104,20 @@ namespace Tests
 
             Vector2 result = range.Lerp(t);
 
-            Assert.IsTrue(Approximately(result, range.Min), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, range.Min), $"Result: {result}");
         }
 
         [Test]
-        [TestCase(0, 1, -1, -5, 1)]
+        [TestCase(0, 1, -1, -5, 1.5f)]
         [TestCase(99.9f, 5, 99.9f, 5, 2)]
-        [TestCase(-5, -1.1f, 100f, -1f, 1.5f)]
+        [TestCase(-5, -1.1f, 100f, -1f, 99.9f)]
         public void Lerp_ValueLargerThanOne_ReturnsMax(float minX, float maxX, float minY, float maxY, float t)
         {
             Range<Vector2> range = new Range<Vector2>(new Vector2(minX, minY), new Vector2(maxX, maxY));
 
             Vector2 result = range.Lerp(t);
 
-            Assert.IsTrue(Approximately(result, range.Max), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, range.Max), $"Result: {result}");
         }
 
         #endregion
@@ -144,7 +134,7 @@ namespace Tests
 
             Vector2 result = range.InverseLerp(range.Max);
 
-            Assert.IsTrue(Approximately(result, 1), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, Vector2.one), $"Result: {result}");
         }
 
         [Test]
@@ -154,13 +144,13 @@ namespace Tests
 
             Vector2 result = range.InverseLerp(min);
 
-            Assert.IsTrue(Approximately(result, 0), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, Vector2.zero), $"Result: {result}");
         }
 
         [Test]
         [TestCase(0, 0, 0, 0)]
         [TestCase(1, 0, 1, 0)]
-        [TestCase(99.9f, -99.9f, 100, -5)]
+        [TestCase(99.9f, -99.9f, 100, -5.5f)]
         public void InverseLerp_RangeWithMinEqualToMax_ReturnsZero(float minMaxX, float minMaxY, float valueX, float valueY)
         {
             Vector2 minMax = new Vector2(minMaxX, minMaxY);
@@ -169,7 +159,7 @@ namespace Tests
 
             Vector2 result = range.InverseLerp(value);
 
-            Assert.IsTrue(Approximately(result, 0), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, Vector2.zero), $"Result: {result}");
         }
 
         [Test]
@@ -186,7 +176,7 @@ namespace Tests
 
             Vector2 result = range.InverseLerp(value);
 
-            Assert.IsTrue(Approximately(result, expectedResult), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, expectedResult * Vector2.one), $"Result: {result}");
         }
 
         [Test]
@@ -202,7 +192,7 @@ namespace Tests
 
             Vector2 result = range.InverseLerp(value);
 
-            Assert.IsTrue(Approximately(result, expectedResult), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, expectedResult), $"Result: {result}");
         }
 
         #endregion
@@ -216,7 +206,7 @@ namespace Tests
 
             Vector2 result = range.SmoothStep(1);
 
-            Assert.IsTrue(Approximately(result, max), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, max), $"Result: {result}");
         }
 
         [Test]
@@ -226,7 +216,7 @@ namespace Tests
 
             Vector2 result = range.SmoothStep(0);
 
-            Assert.IsTrue(Approximately(result, min), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, min), $"Result: {result}");
         }
 
         [Test]
@@ -241,7 +231,7 @@ namespace Tests
 
             Vector2 result = range.SmoothStep(t);
 
-            Assert.IsTrue(Approximately(result, minMax), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, minMax), $"Result: {result}");
         }
 
         [Test]
@@ -257,7 +247,7 @@ namespace Tests
 
             Vector2 result = range.SmoothStep(t);
 
-            Assert.IsTrue(Approximately(result, expectedResult), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, expectedResult), $"Result: {result}");
         }
 
         [Test]
@@ -270,7 +260,7 @@ namespace Tests
 
             Vector2 result = range.SmoothStep(t);
 
-            Assert.IsTrue(Approximately(result, range.Min), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, range.Min), $"Result: {result}");
         }
 
         [Test]
@@ -283,7 +273,7 @@ namespace Tests
 
             Vector2 result = range.SmoothStep(t);
 
-            Assert.IsTrue(Approximately(result, range.Max), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, range.Max), $"Result: {result}");
         }
 
         #endregion
@@ -297,7 +287,7 @@ namespace Tests
 
             Vector2 result = range.Delta();
 
-            Assert.IsTrue(Approximately(result, 0), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, Vector2.zero), $"Result: {result}");
         }
 
         [Test]
@@ -311,7 +301,7 @@ namespace Tests
 
             Vector2 result = range.Delta();
 
-            Assert.IsTrue(Approximately(result, expectedResult), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, expectedResult), $"Result: {result}");
         }
 
         #endregion
@@ -325,7 +315,7 @@ namespace Tests
 
             Vector2 result = range.Size();
 
-            Assert.IsTrue(Approximately(result, 0), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, Vector2.zero), $"Result: {result}");
         }
 
         [Test]
@@ -339,7 +329,7 @@ namespace Tests
 
             Vector2 result = range.Size();
 
-            Assert.IsTrue(Approximately(result, expectedResult), $"Result: {result}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(result, expectedResult), $"Result: {result}");
         }
 
         #endregion
@@ -360,7 +350,7 @@ namespace Tests
 
             Vector2 clampedValue = range.Clamp(value);
 
-            Assert.IsTrue(Approximately(clampedValue, value), $"Result: {clampedValue}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(clampedValue, value), $"Result: {clampedValue}");
         }
 
         [Test]
@@ -376,7 +366,7 @@ namespace Tests
 
             Vector2 clampedValue = range.Clamp(value);
 
-            Assert.IsTrue(Approximately(clampedValue, range.Min), $"Result: {clampedValue}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(clampedValue, range.Min), $"Result: {clampedValue}");
         }
 
         [Test]
@@ -392,7 +382,7 @@ namespace Tests
 
             Vector2 clampedValue = range.Clamp(value);
 
-            Assert.IsTrue(Approximately(clampedValue, expectedResult), $"Result: {clampedValue}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(clampedValue, expectedResult), $"Result: {clampedValue}");
         }
 
         [Test]
@@ -409,7 +399,7 @@ namespace Tests
 
             Vector2 clampedValue = range.Clamp(value);
 
-            Assert.IsTrue(Approximately(clampedValue, expectedResult), $"Result: {clampedValue}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(clampedValue, expectedResult), $"Result: {clampedValue}");
         }
 
         #endregion
@@ -420,11 +410,7 @@ namespace Tests
         public void Contains_ValueInsideOfRange_ReturnsTrue([ValueSource(nameof(TestValues))] Vector2 min, [ValueSource(nameof(TestValues))] Vector2 max)
         {
             Range<Vector2> range = new Range<Vector2>(min, max);
-            Vector2 smaller = new Vector2(Mathf.Min(min.x, max.x), Mathf.Min(min.y, max.y));
-            Vector2 larger = new Vector2(Mathf.Max(min.x, max.x), Mathf.Max(min.y, max.y));
-            float randomX = (float) random.NextDouble() * (larger.x - smaller.x) + smaller.x;
-            float randomY = (float) random.NextDouble() * (larger.y - smaller.y) + smaller.y;
-            Vector2 value = new Vector2(randomX, randomY);
+            Vector2 value = new Vector2(TestHelper.GenerateRandomValueInRange(random, min.x, max.x), TestHelper.GenerateRandomValueInRange(random, min.y, max.y));
 
             bool contains = range.Contains(value);
 
@@ -479,7 +465,7 @@ namespace Tests
 
             Vector2 center = range.Center();
 
-            Assert.IsTrue(Approximately(center, range.Min), $"Result: {center}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(center, range.Min), $"Result: {center}");
         }
 
         [Test]
@@ -493,7 +479,7 @@ namespace Tests
 
             Vector2 center = range.Center();
 
-            Assert.IsTrue(Approximately(center, expectedResult), $"Result: {center}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(center, expectedResult), $"Result: {center}");
         }
 
         [Test]
@@ -505,7 +491,7 @@ namespace Tests
             Vector2 distanceToMin = center - min;
             Vector2 distanceToMax = max - center;
 
-            Assert.IsTrue(Approximately(distanceToMin, distanceToMax), $"Distance to min: {distanceToMin}, distance to max: {distanceToMax}");
+            Assert.IsTrue(TestHelper.EqualsApproximately(distanceToMin, distanceToMax), $"Distance to min: {distanceToMin}, distance to max: {distanceToMax}");
         }
 
         #endregion

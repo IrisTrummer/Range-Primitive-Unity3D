@@ -449,7 +449,7 @@ namespace Tests
         public void Contains_ValueInsideOfRange_ReturnsTrue([ValueSource(nameof(TestValues))] int min, [ValueSource(nameof(TestValues))] int max)
         {
             Range<int> range = new Range<int>(min, max);
-            int value = random.Next(Mathf.Min(min, max), Mathf.Max(min, max));
+            int value = TestHelper.GenerateRandomValueInRange(random, min, max);
 
             bool contains = range.Contains(value);
 
