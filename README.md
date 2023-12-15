@@ -48,7 +48,7 @@ for (int i = 0; i <= 4; i++)
 }
 
 // Get the spread of the defined range
-Debug.Log(range.Spread()); // Output: 156
+Debug.Log(range.Size()); // Output: 156
 
 // Calculate at what point the value 37 lies between the start and end of the range
 Debug.Log(range.InverseLerp(37)); // Output: 0.16
