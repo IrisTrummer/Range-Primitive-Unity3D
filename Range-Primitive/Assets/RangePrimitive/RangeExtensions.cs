@@ -102,7 +102,7 @@ namespace RangePrimitive
         {
             return UnityEngine.Random.Range(min, max + 1);
         }
-        
+
         private static float Random(float min, float max)
         {
             return UnityEngine.Random.Range(min, max);
@@ -174,7 +174,7 @@ namespace RangePrimitive
         {
             return InverseLerp(range.Min, range.Max, value);
         }
-        
+
         /// <summary>
         /// For each component, returns a value between 0 and 1 indicating where the corresponding component of the given value lies between min and max.
         /// </summary>
@@ -182,7 +182,7 @@ namespace RangePrimitive
         {
             return new Vector2(InverseLerp(range.Min.x, range.Max.x, value.x), InverseLerp(range.Min.y, range.Max.y, value.y));
         }
-        
+
         /// <inheritdoc cref="InverseLerp(RangePrimitive.Range{Vector2},Vector2)"/>
         public static Vector2 InverseLerp(this Range<Vector2Int> range, Vector2 value)
         {
@@ -205,7 +205,7 @@ namespace RangePrimitive
         {
             return Mathf.InverseLerp(min, max, value);
         }
-        
+
         #endregion
 
         #region SmoothStep
@@ -223,7 +223,7 @@ namespace RangePrimitive
         {
             return Mathf.SmoothStep(range.Min, range.Max, t);
         }
-        
+
         /// <summary>
         /// Returns the component-wise interpolated value between min and max by t with smoothing at the edges.
         /// </summary>
@@ -298,9 +298,9 @@ namespace RangePrimitive
         {
             return range.Max - range.Min;
         }
-        
+
         #endregion
-        
+
         #region Size
 
         /// <summary>
@@ -380,6 +380,12 @@ namespace RangePrimitive
         }
 
         /// <inheritdoc cref="Clamp(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static Vector2 Clamp(this Range<Vector2Int> range, Vector2 value)
+        {
+            return new Vector2(Clamp(value.x, range.Min.x, range.Max.x), Clamp(value.y, range.Min.y, range.Max.y));
+        }
+
+        /// <inheritdoc cref="Clamp(RangePrimitive.Range{Vector2},Vector2)"/>
         public static Vector3 Clamp(this Range<Vector3> range, Vector3 value)
         {
             return new Vector3(Clamp(value.x, range.Min.x, range.Max.x), Clamp(value.y, range.Min.y, range.Max.y), Clamp(value.z, range.Min.z, range.Max.z));
@@ -391,11 +397,17 @@ namespace RangePrimitive
             return new Vector3Int(Clamp(value.x, range.Min.x, range.Max.x), Clamp(value.y, range.Min.y, range.Max.y), Clamp(value.z, range.Min.z, range.Max.z));
         }
 
+        /// <inheritdoc cref="Clamp(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static Vector3 Clamp(this Range<Vector3Int> range, Vector3 value)
+        {
+            return new Vector3(Clamp(value.x, range.Min.x, range.Max.x), Clamp(value.y, range.Min.y, range.Max.y), Clamp(value.z, range.Min.z, range.Max.z));
+        }
+
         private static int Clamp(int value, int min, int max)
         {
             return Mathf.Clamp(value, Mathf.Min(min, max), Mathf.Max(min, max));
         }
-        
+
         private static float Clamp(float value, float min, float max)
         {
             return Mathf.Clamp(value, Mathf.Min(min, max), Mathf.Max(min, max));
@@ -434,6 +446,12 @@ namespace RangePrimitive
         }
 
         /// <inheritdoc cref="Contains(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static bool Contains(this Range<Vector2Int> range, Vector2 value)
+        {
+            return Contains(value.x, range.Min.x, range.Max.x) && Contains(value.y, range.Min.y, range.Max.y);
+        }
+
+        /// <inheritdoc cref="Contains(RangePrimitive.Range{Vector2},Vector2)"/>
         public static bool Contains(this Range<Vector3> range, Vector3 value)
         {
             return Contains(value.x, range.Min.x, range.Max.x) && Contains(value.y, range.Min.y, range.Max.y) && Contains(value.z, range.Min.z, range.Max.z);
@@ -441,6 +459,12 @@ namespace RangePrimitive
 
         /// <inheritdoc cref="Contains(RangePrimitive.Range{Vector2},Vector2)"/>
         public static bool Contains(this Range<Vector3Int> range, Vector3Int value)
+        {
+            return Contains(value.x, range.Min.x, range.Max.x) && Contains(value.y, range.Min.y, range.Max.y) && Contains(value.z, range.Min.z, range.Max.z);
+        }
+
+        /// <inheritdoc cref="Contains(RangePrimitive.Range{Vector2},Vector2)"/>
+        public static bool Contains(this Range<Vector3Int> range, Vector3 value)
         {
             return Contains(value.x, range.Min.x, range.Max.x) && Contains(value.y, range.Min.y, range.Max.y) && Contains(value.z, range.Min.z, range.Max.z);
         }
@@ -458,7 +482,7 @@ namespace RangePrimitive
         #endregion
 
         #region Center
-        
+
         /// <summary>
         /// Gets the center point of the range, which is equal to the point in the middle between the min and max.
         /// </summary>
@@ -466,7 +490,7 @@ namespace RangePrimitive
         {
             return range.Lerp(0.5f);
         }
-        
+
         /// <inheritdoc cref="Center(RangePrimitive.Range{int})"/>
         public static float Center(this Range<float> range)
         {
@@ -480,7 +504,7 @@ namespace RangePrimitive
         {
             return range.Lerp(0.5f);
         }
-        
+
         /// <inheritdoc cref="Center(RangePrimitive.Range{UnityEngine.Vector2})"/>
         public static Vector2 Center(this Range<Vector2Int> range)
         {
@@ -492,7 +516,7 @@ namespace RangePrimitive
         {
             return range.Lerp(0.5f);
         }
-        
+
         /// <inheritdoc cref="Center(RangePrimitive.Range{UnityEngine.Vector2})"/>
         public static Vector3 Center(this Range<Vector3Int> range)
         {
