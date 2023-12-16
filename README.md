@@ -2,7 +2,8 @@
 
 A primitive type for creating restricted ranges for values in Unity.
 
-Includes:
+## Features
+
 - range primitive type
 - custom Unity property drawer
 - extension methods for various math operations
@@ -14,6 +15,10 @@ Currently supports:
 ## Usage and Examples
 
 ### Creation
+
+The range constructor takes two arguments:
+- `min`: The minimum value (lower boundary) of the range
+- `max`: The maximum value (upper boundary) of the range
 
 Creating a new range object.
 
@@ -69,8 +74,9 @@ for (int i = 0; i < 3; i++)
 Debug.Log(range.Contains(new Vector2(-8.3f, 15f))); // Output: False
 ```
 
-## TODO: Installation
+## Installation
 
-To install this package in your project use one of the following:
-
-1. ...
+The package can be installed using [OpenUPM](https://openupm.com/packages/com.iristrummer.range-primitive)
+1. Install the [OpenUPM CLI](https://github.com/openupm/openupm-cli#installation)
+2. Run the following command in the command line in your project directory:
+`openupm add com.iristrummer.range-primitive`
