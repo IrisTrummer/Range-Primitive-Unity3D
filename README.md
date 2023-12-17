@@ -2,6 +2,8 @@
 
 A primitive type for creating restricted ranges for values in Unity.
 
+[![openupm](https://img.shields.io/npm/v/com.iristrummer.range-primitive?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.iristrummer.range-primitive/)
+
 ## Features
 
 - range primitive type
@@ -79,4 +81,6 @@ Debug.Log(range.Contains(new Vector2(-8.3f, 15f))); // Output: False
 The package can be installed using [OpenUPM](https://openupm.com/packages/com.iristrummer.range-primitive)
 1. Install the [OpenUPM CLI](https://github.com/openupm/openupm-cli#installation)
 2. Run the following command in the command line in your project directory:
-`openupm add com.iristrummer.range-primitive`
+```bash
+openupm add com.iristrummer.range-primitive
+```
