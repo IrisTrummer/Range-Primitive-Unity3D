@@ -1,6 +1,6 @@
 # Range-Primitive-Unity3D
 
-A primitive type for creating restricted ranges for values in Unity.
+A primitive type for creating ranges of values in Unity.
 
 [![openupm](https://img.shields.io/npm/v/com.iristrummer.range-primitive?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.iristrummer.range-primitive/)
 
@@ -22,13 +22,13 @@ The range constructor takes two arguments:
 - `min`: The minimum value (lower boundary) of the range
 - `max`: The maximum value (upper boundary) of the range
 
-Creating a new range object.
+Creating a new range object:
 
 ```csharp
 Range<int> myRange = new Range<int>(1, 5);
 ```
 
-Creating a new range object as a Unity field.
+Creating a new range object as a Unity field:
 
 ```csharp
 using RangePrimitive;
@@ -43,7 +43,7 @@ public class Foo : MonoBehaviour
 
 ### Usage Examples
 
-One-dimensional range.
+One-dimensional range:
 
 ```csharp
 // Generate 5 equally distributed samples between two values
@@ -61,7 +61,7 @@ Debug.Log(range.Size()); // Output: 156
 Debug.Log(range.InverseLerp(37)); // Output: 0.16
 ```
 
-Two-dimensional range.
+Two-dimensional range:
 
 ```csharp
 // Generate 3 random points in a defined 2D area
