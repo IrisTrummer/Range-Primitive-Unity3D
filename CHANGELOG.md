@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Add OpenUPM banner to README
+- Adjust README formatting
+- Adjust author link
+
 ## [1.0.0] - 2023-12-16
 
 - Initial release
