@@ -1,6 +1,6 @@
 {
   "name": "com.iristrummer.range-primitive",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Range Primitive",
   "description": "A primitive type for creating ranges of values in Unity",
   "documentationUrl": "https://github.com/IrisTrummer/Range-Primitive-Unity3D/blob/main/README.md",
